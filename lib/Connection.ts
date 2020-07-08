@@ -10,11 +10,17 @@ export class Connection {
         this.es = es
         this.listener = listener
 
-        es.addEventListener('message', listener)
+        es.addEventListener('message', this.onMessage.bind(this))
+    }
+
+    onMessage(event: MessageEvent) {
+        const parsedData = JSON.parse(event.data)
+
+        this.listener.call(undefined, parsedData)
     }
 
     close(): Promise<void> {
-        this.es.removeEventListener('message', this.listener)
+        this.es.close()
 
         return Promise.resolve()
     }
