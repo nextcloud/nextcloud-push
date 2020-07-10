@@ -18,10 +18,10 @@ class ConnectionDetails {
     }
 }
 
-async function validateAccess(appId: string, topic: string, uid: string): Promise<ConnectionDetails> {
+async function validateAccess(appId: string, topic: string): Promise<ConnectionDetails> {
     const resp = await axios.put(generateOcsUrl('core/push/access', 2).replace(/\/$/, ''), {
-        appId: 'notifications',
-        topic: 'admin'
+        appId,
+        topic
     });
     const {jwt, endpoint} = resp.data.ocs.data
 
@@ -29,7 +29,7 @@ async function validateAccess(appId: string, topic: string, uid: string): Promis
 }
 
 export async function connect(appId: string, topic: string, uid: string, listener: Listener): Promise<Connection> {
-    const details = await validateAccess(appId, topic, uid)
+    const details = await validateAccess(appId, topic)
 
     return new Connection(
         new EventSourceImplementation(details.url, {
