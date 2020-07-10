@@ -20,7 +20,6 @@ import { connect } from '@nextcloud/push'
 const connection = connect(
     'mail',
     'folder/INBOX',
-    'gerda',
     e => console.info(e)
 )
 
